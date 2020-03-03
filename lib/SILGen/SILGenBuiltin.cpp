@@ -1115,8 +1115,13 @@ static ManagedValue emitBuiltinAutoDiffApplyDerivativeFunction(
     SGF.B.createStore(loc, differential,
                       SGF.B.createTupleElementAddr(loc, indResBuffer, 1),
                       StoreOwnershipQualifier::Init);
+    AbstractionPattern pattern(SGF.F.getLoweredFunctionType()->getSubstGenericSignature(), indResBuffer->getType().getASTType());
+    // auto &asdf = SGF.getTypeLowering(indResBuffer->getType());
+    auto &asdf = SGF.getTypeLowering(pattern, indResBuffer->getType().getASTType());
+    llvm::errs() << "HELLO WHAT IS THIS TYPE: " << asdf.getLoweredType() << "\n";
+    SGF.F.dump();
     return SGF.manageBufferForExprResult(
-        indResBuffer, SGF.getTypeLowering(indResBuffer->getType()), C);
+        indResBuffer, asdf, C);
   }
 
   // Apply the last curry level, in the case where it only has direct results.

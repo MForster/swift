@@ -124,6 +124,7 @@ extension Array: KeyPathIterable {
 //   error: conditional conformance of type 'Array<Element>.DifferentiableView'
 //   to protocol 'KeyPathIterable' does not imply conformance to inherited
 //   protocol '_KeyPathIterableBase'.
+/*
 extension Array.DifferentiableView: _KeyPathIterableBase
 where Element: Differentiable {}
 
@@ -135,8 +136,10 @@ where Element: Differentiable {
     let result = [\Array.DifferentiableView.base]
     _internalInvariant(areWritable(result, valueType: Array.self))
     return result
+    return []
   }
 }
+*/
 
 extension Dictionary: KeyPathIterable {
   public typealias AllKeyPaths = [PartialKeyPath<Dictionary>]

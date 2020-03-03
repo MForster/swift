@@ -790,7 +790,15 @@ void SILGenFunction::collectThunkParams(
     SmallVectorImpl<SILArgument *> *indirectResults) {
   // Add the indirect results.
   for (auto resultTy : F.getConventions().getIndirectSILResultTypes()) {
+#if 0
+    auto paramTy = resultTy;
+    if (paramTy.hasArchetype())
+      paramTy = paramTy.mapTypeOutOfContext();
+    paramTy = F.mapTypeIntoContext(paramTy);
+#endif
+// #if 0
     auto paramTy = F.mapTypeIntoContext(resultTy);
+// #endif
     // Lower result parameters in the context of the function: opaque result
     // types will be lowered to their underlying type if allowed by resilience.
     auto inContextParamTy = F.getLoweredType(paramTy.getASTType())
@@ -803,7 +811,15 @@ void SILGenFunction::collectThunkParams(
   // Add the parameters.
   auto paramTypes = F.getLoweredFunctionType()->getParameters();
   for (auto param : paramTypes) {
+#if 0
+    auto paramTy = F.getConventions().getSILType(param);
+    if (paramTy.hasArchetype())
+      paramTy = paramTy.mapTypeOutOfContext();
+    paramTy = F.mapTypeIntoContext(paramTy);
+#endif
+// #if 0
     auto paramTy = F.mapTypeIntoContext(F.getConventions().getSILType(param));
+// #endif
     // Lower parameters in the context of the function: opaque result types will
     // be lowered to their underlying type if allowed by resilience.
     auto inContextParamTy = F.getLoweredType(paramTy.getASTType())
@@ -1626,6 +1642,9 @@ static ManagedValue applyTrivialConversions(SILGenFunction &SGF,
     }
   }
 
+  llvm::errs() << "ERROR!\n";
+  innerASTTy->dump();
+  outerASTTy->dump();
   llvm_unreachable("unhandled reabstraction type mismatch");
 }
 
@@ -3790,6 +3809,8 @@ SILFunction *SILGenModule::getOrCreateCustomDerivativeThunk(
   SILGenFunctionBuilder fb(*this);
   // This thunk is publicly exposed and cannot be transparent.
   // Instead, mark it as "always inline" for optimization.
+  llvm::errs() << "THUNK TYPE\n";
+  thunkFnTy->dump();
   auto *thunk = fb.getOrCreateFunction(
       loc, name, customDerivativeFn->getLinkage(), thunkFnTy, IsBare,
       IsNotTransparent, customDerivativeFn->isSerialized(),
@@ -3807,7 +3828,8 @@ SILFunction *SILGenModule::getOrCreateCustomDerivativeThunk(
   thunkSGF.collectThunkParams(loc, params, &indirectResults);
 
   auto *fnRef = thunkSGF.B.createFunctionRef(loc, customDerivativeFn);
-  auto fnRefType = fnRef->getType().castTo<SILFunctionType>();
+  // auto fnRefType = fnRef->getType().mapTypeOutOfContext().castTo<SILFunctionType>();
+  auto fnRefType = thunkSGF.F.mapTypeIntoContext(fnRef->getType().mapTypeOutOfContext()).castTo<SILFunctionType>();
 
   // Collect thunk arguments, converting ownership.
   SmallVector<SILValue, 8> arguments;

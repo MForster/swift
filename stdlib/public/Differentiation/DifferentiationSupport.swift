@@ -209,6 +209,7 @@ public func withoutDerivative<T, R>(at x: T, in body: (T) -> R) -> R {
 // Functional utilities
 //===----------------------------------------------------------------------===//
 
+/*
 /// Create a differentiable function from a vector-Jacobian products function.
 @inlinable
 public func differentiableFunction<T : Differentiable, R : Differentiable>(
@@ -293,11 +294,13 @@ public extension Differentiable {
     )
   }
 }
+*/
 
 //===----------------------------------------------------------------------===//
 // Method-style differential operators
 //===----------------------------------------------------------------------===//
 
+/*
 public extension Differentiable {
   @available(*, deprecated, message: """
     Method-style differential operators are deprecated and will be removed; \
@@ -740,11 +743,13 @@ public func valueWithGradient<T, U, V, R>(
   where R : FloatingPoint, R.TangentVector == R {
   return { x, y, z in valueWithGradient(at: x, y, z, in: f) }
 }
+*/
 
 //===----------------------------------------------------------------------===//
 // Type-erased `AnyDerivative`
 //===----------------------------------------------------------------------===//
 
+/*
 @usableFromInline
 internal protocol _AnyDerivativeBox {
   // `Equatable` requirements (implied by `AdditiveArithmetic`).
@@ -1026,11 +1031,13 @@ public struct AnyDerivative: EuclideanDifferentiable & AdditiveArithmetic {
     return self
   }
 }
+*/
 
 //===----------------------------------------------------------------------===//
 // Array differentiation
 //===----------------------------------------------------------------------===//
 
+/*
 // TODO(TF-938): Add 'Element : Differentiable' constraint.
 extension Array {
   /// The view of an array as the differentiable product manifold of `Element`
@@ -1275,6 +1282,7 @@ extension Array where Element: Differentiable {
 // Differentiable higher order functions for collections
 //===----------------------------------------------------------------------===//
 
+/*
 public extension Array where Element: Differentiable {
   @differentiable(wrt: (self, initialResult))
   func differentiableReduce<Result: Differentiable>(
@@ -1345,6 +1353,7 @@ public extension Array where Element: Differentiable {
     return (value: values, pullback: pullback)
   }
 }
+*/
 
 //===----------------------------------------------------------------------===//
 // JVP diagnostics
@@ -1558,3 +1567,4 @@ extension SIMD
       return (Self(repeating: value), { v in v.sum() })
   }
 }
+*/
