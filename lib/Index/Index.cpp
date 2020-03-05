@@ -37,6 +37,8 @@
 using namespace swift;
 using namespace swift::index;
 
+#ifdef FORSTER_ENABLE_INDEXING
+
 static bool
 printArtificialName(const swift::AbstractStorageDecl *ASD, AccessorKind AK, llvm::raw_ostream &OS) {
   switch (AK) {
@@ -1604,3 +1606,18 @@ void index::indexModule(ModuleDecl *module, IndexDataConsumer &consumer) {
   walker.visitModule(*module);
   consumer.finish();
 }
+
+#else
+
+void index::indexDeclContext(DeclContext *DC, IndexDataConsumer &consumer) {
+  assert(false);
+}
+
+void index::indexSourceFile(SourceFile *SF, IndexDataConsumer &consumer) {
+  assert(false);
+}
+
+void index::indexModule(ModuleDecl *module, IndexDataConsumer &consumer) {
+  assert(false);
+}
+#endif

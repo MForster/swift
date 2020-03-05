@@ -3659,10 +3659,12 @@ swift::ide::collectRenameAvailabilityInfo(const ValueDecl *VD,
     return Scratch;
   }
 
+#ifdef FORSTER_ENABLE_INDEXING
   // If the indexer considers VD a global symbol, then we apply global rename.
   if (index::isLocalSymbol(VD))
     Scratch.emplace_back(RefactoringKind::LocalRename, AvailKind);
   else
+#endif
     Scratch.emplace_back(RefactoringKind::GlobalRename, AvailKind);
 
   return llvm::makeArrayRef(Scratch);

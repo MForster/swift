@@ -1723,6 +1723,7 @@ static bool emitIndexDataIfNeeded(SourceFile *PrimarySourceFile,
       break;
   }
 
+#ifdef FORSTER_ENABLE_INDEXING
   if (PrimarySourceFile) {
     const PrimarySpecificPaths &PSPs =
         opts.InputsAndOutputs.getPrimarySpecificPathsForPrimary(
@@ -1747,6 +1748,7 @@ static bool emitIndexDataIfNeeded(SourceFile *PrimarySourceFile,
       return true;
     }
   }
+#endif
 
   return false;
 }

@@ -10,6 +10,8 @@
 //
 //===----------------------------------------------------------------------===//
 
+#ifdef FORSTER_ENABLE_INDEXING
+
 #include "swift/Index/IndexSymbol.h"
 #include "swift/AST/ASTContext.h"
 #include "swift/AST/Decl.h"
@@ -273,3 +275,5 @@ bool index::isLocalSymbol(const swift::Decl *D) {
     (!isa<ParamDecl>(D) || cast<ParamDecl>(D)->getArgumentNameLoc().isValid() ||
      D->getDeclContext()->getContextKind() == DeclContextKind::AbstractClosureExpr);
 }
+
+#endif

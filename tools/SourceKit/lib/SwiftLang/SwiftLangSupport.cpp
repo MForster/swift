@@ -614,10 +614,12 @@ UIdent SwiftLangSupport::getUIDForSymbol(SymbolInfo sym, bool isRef) {
   default: break;
   case SymbolSubKind::AccessorGetter: return UID_FOR(AccessorGetter);
   case SymbolSubKind::AccessorSetter: return UID_FOR(AccessorSetter);
+#ifdef FORSTER_ENABLE_INDEXING
   case SymbolSubKind::SwiftAccessorWillSet: return UID_FOR(AccessorWillSet);
   case SymbolSubKind::SwiftAccessorDidSet: return UID_FOR(AccessorDidSet);
   case SymbolSubKind::SwiftAccessorAddressor: return UID_FOR(AccessorAddress);
   case SymbolSubKind::SwiftAccessorMutableAddressor: return UID_FOR(AccessorMutableAddress);
+#endif
   }
 
 #define SIMPLE_CASE(KIND) \
@@ -636,20 +638,24 @@ UIdent SwiftLangSupport::getUIDForSymbol(SymbolInfo sym, bool isRef) {
     return UID_FOR(EnumElement);
 
   case SymbolKind::TypeAlias:
+#ifdef FORSTER_ENABLE_INDEXING
     if (sym.SubKind == SymbolSubKind::SwiftAssociatedType)
       return UID_FOR(AssociatedType);
     if (sym.SubKind == SymbolSubKind::SwiftGenericTypeParam)
       return UID_FOR(GenericTypeParam);
+#endif
     return UID_FOR(TypeAlias);
 
   case SymbolKind::Function:
   case SymbolKind::StaticMethod:
+#ifdef FORSTER_ENABLE_INDEXING
     if (sym.SubKind == SymbolSubKind::SwiftPrefixOperator)
       return UID_FOR(FunctionPrefixOperator);
     if (sym.SubKind == SymbolSubKind::SwiftPostfixOperator)
       return UID_FOR(FunctionPostfixOperator);
     if (sym.SubKind == SymbolSubKind::SwiftInfixOperator)
       return UID_FOR(FunctionInfixOperator);
+#endif
     if (sym.Kind == SymbolKind::StaticMethod) {
       return UID_FOR(MethodStatic);
     } else {
@@ -662,14 +668,17 @@ UIdent SwiftLangSupport::getUIDForSymbol(SymbolInfo sym, bool isRef) {
   case SymbolKind::ClassMethod:
     return UID_FOR(MethodClass);
   case SymbolKind::InstanceProperty:
+#ifdef FORSTER_ENABLE_INDEXING
     if (sym.SubKind == SymbolSubKind::SwiftSubscript)
       return UID_FOR(Subscript);
+#endif
     return UID_FOR(VarInstance);
   case SymbolKind::ClassProperty:
     return UID_FOR(VarClass);
   case SymbolKind::StaticProperty:
     return UID_FOR(VarStatic);
 
+#ifdef FORSTER_ENABLE_INDEXING
   case SymbolKind::Extension:
     assert(!isRef && "reference to extension decl?");
     if (sym.SubKind == SymbolSubKind::SwiftExtensionOfStruct) {
@@ -683,6 +692,7 @@ UIdent SwiftLangSupport::getUIDForSymbol(SymbolInfo sym, bool isRef) {
     } else {
       llvm_unreachable("missing extension sub kind");
     }
+#endif
 
   case SymbolKind::Module:
     return KindRefModule;

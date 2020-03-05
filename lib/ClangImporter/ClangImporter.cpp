@@ -1485,10 +1485,12 @@ static
 std::unique_ptr<clang::FrontendAction> wrapActionForIndexingIfEnabled(
     const clang::FrontendOptions &FrontendOpts,
     std::unique_ptr<clang::FrontendAction> action) {
+#ifdef FORSTER_ENABLE_INDEXING
   if (!FrontendOpts.IndexStorePath.empty()) {
     return clang::index::createIndexDataRecordingAction(
         FrontendOpts, std::move(action));
   }
+#endif
   return action;
 }
 
@@ -1696,6 +1698,7 @@ ModuleDecl *ClangImporter::Implementation::loadModuleClang(
     auto importRAII =
         diagClient.handleImport(clangPath.front().first, importLoc);
 
+#ifdef FORSTER_ENABLE_INDEXING
     std::string preservedIndexStorePathOption;
     auto &clangFEOpts = Instance->getFrontendOpts();
     if (!clangFEOpts.IndexStorePath.empty()) {
@@ -1706,6 +1709,7 @@ ModuleDecl *ClangImporter::Implementation::loadModuleClang(
         clangFEOpts.IndexStorePath.clear();
       }
     }
+#endif
 
     clang::SourceLocation clangImportLoc = getNextIncludeLoc();
 
@@ -1713,10 +1717,12 @@ ModuleDecl *ClangImporter::Implementation::loadModuleClang(
         Instance->loadModule(clangImportLoc, path, visibility,
                              /*IsInclusionDirective=*/false);
 
+#ifdef FORSTER_ENABLE_INDEXING
     if (!preservedIndexStorePathOption.empty()) {
       // Restore the -index-store-path option.
       clangFEOpts.IndexStorePath = preservedIndexStorePathOption;
     }
+#endif
 
     if (result && makeVisible)
       getClangPreprocessor().makeModuleVisible(result, clangImportLoc);

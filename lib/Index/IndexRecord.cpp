@@ -10,6 +10,8 @@
 //
 //===----------------------------------------------------------------------===//
 
+#ifdef FORSTER_ENABLE_INDEXING
+
 #include "swift/Index/IndexRecord.h"
 #include "swift/AST/ASTContext.h"
 #include "swift/AST/Decl.h"
@@ -750,3 +752,5 @@ bool index::indexAndRecord(ModuleDecl *module,
 
   return false;
 }
+
+#endif
