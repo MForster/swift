@@ -670,6 +670,7 @@ getNormalInvocationArguments(std::vector<std::string> &invocationArgStrs,
     });
   }
 
+#ifdef FORSTER_ENABLE_APINOTES
   // Enable API notes alongside headers/in frameworks.
   invocationArgStrs.push_back("-fapinotes-modules");
   invocationArgStrs.push_back("-fapinotes-swift-version=" +
@@ -678,6 +679,7 @@ getNormalInvocationArguments(std::vector<std::string> &invocationArgStrs,
   invocationArgStrs.push_back((llvm::Twine(searchPathOpts.RuntimeResourcePath) +
                                llvm::sys::path::get_separator() +
                                "apinotes").str());
+#endif
 }
 
 static void
